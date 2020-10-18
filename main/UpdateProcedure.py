@@ -6,11 +6,11 @@ to understand the algorithm
 '''
 
 class AdaptiveHuffmanTree:
-    # not yet transmitted node (weight = 0, number is min)
+# not yet transmitted node (weight = 0, number is min)
     NYT = None 
-    # Save the symbols that were transmitted
+# Save the symbols that were transmitted
     SymbolsTransmited = {}
-    #init the tree (root node ~ parent = None, symbol = None)
+#init the tree (root node ~ parent = None, symbol = None)
     def __init__(self, number, parent = None, symbol = None):
         AdaptiveHuffmanTree.NYT = self
         self.right = self.left = None
@@ -18,8 +18,8 @@ class AdaptiveHuffmanTree:
         self.symbol = symbol
         self.number = number
         self.weight = 0
-    #swap the current node with the max number node in block (block contains node with the same weight)
-    def swapNode(self, current):
+#swap the current node with the max number node in block (block contains node with the same weight)
+    def SwapNode(self, current):
         if(current != self):
             parent = current.parent
             ''' * if current is the right child -> dont need to swap 
@@ -35,8 +35,8 @@ class AdaptiveHuffmanTree:
                 parent.right = current
                 # make the number as before swapping
                 [parent.left.number ,parent.right.number] = numberBeforeSwap
-    #find and return the external node and road from root to it
-    def findExternalNode(self, symbol):
+#find and return the external node and road from root to it
+    def FindExternalNode(self, symbol):
         road = ""
         current = self
         while(current.symbol != symbol):
@@ -53,11 +53,11 @@ class AdaptiveHuffmanTree:
                 current = current.right
                 road += "1"
         return [current, road]
-    #find and return the road from root to the NYT node
-    def findRoadToNYT(self, NYT):
+#find and return the road from root to the NYT node
+    def FindRoadToNYT(self):
         road = ""
         current = self
-        while(current != NYT):
+        while(current != self.NYT):
             if (current.left.symbol == None): 
                 current = current.left
                 road += "0"
@@ -65,14 +65,12 @@ class AdaptiveHuffmanTree:
                 current = current.right
                 road += "1"
         return road
-
-    def UpdateProcedure(self, symbol):
+#UpdateProcedure function
+    def UpdateProcedure(self, symbol, current = None):
         # If first appearance for symbol
         if(AdaptiveHuffmanTree.SymbolsTransmited.get(symbol) == None):
-            # current <- NYT
+            #current <- NYT
             current = AdaptiveHuffmanTree.NYT
-            # find road from root to NYT
-            road = AdaptiveHuffmanTree.findRoadToNYT(self, current)
             #NYT node gives birth to new NYT and external node
             current.right = AdaptiveHuffmanTree(current.number - 1, current, symbol)
             current.left = AdaptiveHuffmanTree(current.number - 2, current) # new NYT node
@@ -84,23 +82,20 @@ class AdaptiveHuffmanTree:
             #if not root -> go to parent node -> swap (if not max in block) -> Increment weight node
             while (current != self):
                 current = current.parent
-                AdaptiveHuffmanTree.swapNode(self, current)
+                AdaptiveHuffmanTree.SwapNode(self, current)
                 current.weight+=1
         # If symbol had been appeared before
         else:
-            # go to symbol external node (find the symbol in tree)
-            [current, road] = AdaptiveHuffmanTree.findExternalNode(self, symbol)
             # swap (if not max in block) -> Increment weight node
-            AdaptiveHuffmanTree.swapNode(self, current)
+            AdaptiveHuffmanTree.SwapNode(self, current)
             current.weight+=1
             # if not root -> go to parent node -> swap (if not max in block) -> Increment weight node
             while (current != self):
                 current = current.parent
-                AdaptiveHuffmanTree.swapNode(self, current)
+                AdaptiveHuffmanTree.SwapNode(self, current)
                 current.weight+=1
-        return road
-    # traver the tree in pre-order
-    def preOrderTraversal(self):
+# traver the tree in pre-order
+    def PreOrderTraversal(self):
         print(self.number, self.weight, self.symbol)
-        if(self.left != None): self.left.preOrderTraversal()
-        if(self.right != None): self.right.preOrderTraversal() 
+        if(self.left != None): self.left.PreOrderTraversal()
+        if(self.right != None): self.right.PreOrderTraversal() 

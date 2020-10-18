@@ -31,9 +31,15 @@ def EncodeProcedure(inputSourceSize, symbols) :
     for s in symbols :
         # if s have not been transmited yet
         if(AHM_Tree.SymbolsTransmited.get(s) == None):
-           encodedString = encodedString + AHM_Tree.UpdateProcedure(s) + Encode(inputSourceSize, s)
+            #find road to NYT node
+            roadToNYT = AHM_Tree.FindRoadToNYT()
+            encodedString +=  (roadToNYT + Encode(inputSourceSize, s))
+            AHM_Tree.UpdateProcedure(s)
         else: # if s have been transmited yet
-            encodedString += AHM_Tree.UpdateProcedure(s)
+            #find external node and road to it
+            [externalNode, roadToExternalNode] = AHM_Tree.FindExternalNode(s)
+            encodedString += roadToExternalNode
+            AHM_Tree.UpdateProcedure(s, externalNode)
     return encodedString
 
 
