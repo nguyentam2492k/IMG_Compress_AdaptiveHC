@@ -4,7 +4,6 @@ to understand the algorithm
     B2: read __init__ function
     B3: read UpdateProcedure() function
 '''
-
 class AdaptiveHuffmanTree:
 # not yet transmitted node (weight = 0, number is min)
     NYT = None 
@@ -18,11 +17,15 @@ class AdaptiveHuffmanTree:
         self.symbol = symbol
         self.number = number
         self.weight = 0
+#refresh the SymbolsTransmited dict
+    def refresh(self):
+        AdaptiveHuffmanTree.SymbolsTransmited = {}
 #swap the current node with the max number node in block (block contains node with the same weight)
     def SwapNode(self, current):
         if(current != self):
             parent = current.parent
-            ''' * if current is the right child -> dont need to swap 
+            ''' 
+                * if current is the right child -> dont need to swap 
                   because number of the right child > left one
                 * dont need to compare weight with the children , just need compare with sibling 
                   because the parent's weight always > the its child weight 
@@ -35,36 +38,6 @@ class AdaptiveHuffmanTree:
                 parent.right = current
                 # make the number as before swapping
                 [parent.left.number ,parent.right.number] = numberBeforeSwap
-#find and return the external node and road from root to it
-    def FindExternalNode(self, symbol):
-        road = ""
-        current = self
-        while(current.symbol != symbol):
-            if(current.left.symbol == symbol): 
-                current = current.left
-                road += "0"
-            elif (current.right.symbol == symbol): 
-                current = current.right
-                road += "1"
-            elif (current.left.symbol == None): 
-                current = current.left
-                road += "0"
-            else: 
-                current = current.right
-                road += "1"
-        return [current, road]
-#find and return the road from root to the NYT node
-    def FindRoadToNYT(self):
-        road = ""
-        current = self
-        while(current != self.NYT):
-            if (current.left.symbol == None): 
-                current = current.left
-                road += "0"
-            else: 
-                current = current.right
-                road += "1"
-        return road
 #UpdateProcedure function
     def UpdateProcedure(self, symbol, current = None):
         # If first appearance for symbol
@@ -79,22 +52,17 @@ class AdaptiveHuffmanTree:
             current.weight+=1 #old NYT node
             #Sign the symbols had been transmited by an array
             AdaptiveHuffmanTree.SymbolsTransmited[symbol] = 1
-            #if not root -> go to parent node -> swap (if not max in block) -> Increment weight node
-            while (current != self):
-                current = current.parent
-                AdaptiveHuffmanTree.SwapNode(self, current)
-                current.weight+=1
         # If symbol had been appeared before
         else:
             # swap (if not max in block) -> Increment weight node
-            AdaptiveHuffmanTree.SwapNode(self, current)
+            self.SwapNode(current)
             current.weight+=1
-            # if not root -> go to parent node -> swap (if not max in block) -> Increment weight node
-            while (current != self):
-                current = current.parent
-                AdaptiveHuffmanTree.SwapNode(self, current)
-                current.weight+=1
-# traver the tree in pre-order
+        # if not root -> go to parent node -> swap (if not max in block) -> Increment weight node
+        while (current != self):
+            current = current.parent
+            self.SwapNode(current)
+            current.weight+=1
+# traver the tree in pre-order to test
     def PreOrderTraversal(self):
         print(self.number, self.weight, self.symbol)
         if(self.left != None): self.left.PreOrderTraversal()
