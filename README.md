@@ -1,4 +1,4 @@
-# IMG_Compress_AdaptiveHC
+﻿# IMG_Compress_AdaptiveHC
 Image compressing using Adaptive Huffman Coding Agorithm -- Multimedia Communications Project
 
 Member 1:
@@ -27,6 +27,6 @@ Member 4:
  
 Member 5:
  + Name: Nguyễn Văn Tâm
- + Student Code :  
- + Mail : 
- + Contacts : 
+ + Student Code : 18021116 
+ + Mail : tamvai41@gmail.com
+ + Contacts : 0869235543
